@@ -33,15 +33,18 @@ async def on_message(message):
                     "X-Title": "Discord AI Bot"
                 }
                 
-                # استخدام نموذج مجاني ممتاّز وسريع ويدعم اللغة العربية
+                # ترتيب الرسائل بشكل صحيح
                 data = {
                     "model": "google/gemini-2.0-flash-lite-001:free",
                     "messages": [
                         {
                             "role": "system", 
-                            "content": "أنت مساعد ذكي وتتحدث وتفهم اللغة العربية بطلاقة. أجب دائماً باللغة العربية بأسلوب واضح وودود."
+                            "content": "أنت مساعد ذكي تتحدث وتفهم اللغة العربية بطلاقة، وتجيب دائماً باللغة العربية بأسلوب واضح ومفيد."
                         },
-                        {"role": "user", "content": prompt}
+                        {
+                            "role": "user", 
+                            "content": prompt
+                        }
                     ]
                 }
                 
@@ -57,7 +60,7 @@ async def on_message(message):
                 if response.status_code == 200 and "choices" in res_data and len(res_data["choices"]) > 0:
                     reply = res_data['choices'][0]['message']['content']
 
-                    # تقطيع الرد إذا كان أطول من حد ديسكورد (2000 حرف)
+                    # تقطيع الرد إذا كان أطول من 2000 حرف
                     if len(reply) > 2000:
                         for i in range(0, len(reply), 2000):
                             await message.channel.send(reply[i:i+2000])
