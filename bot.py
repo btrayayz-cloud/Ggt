@@ -1,7 +1,24 @@
 import os
 import discord
 import requests
+from flask import Flask
+from threading import Thread
 
+# خادم وهمي بسيط لإرضاء منصة Render ومنع إغلاق المشروع بسبب الـ Port
+app = Flask('')
+
+@app.route('/')
+def home():
+    return "Bot is running!"
+
+def run():
+    app.run(host='0.0.0.0', port=8080)
+
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
+
+# إعداد بوت ديسكورد
 intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
@@ -18,6 +35,7 @@ async def on_message(message):
     if message.author == client.user:
         return
 
+    # التفاعل عند إشارة البوت أو في الرسائل الخاصة
     if client.user.mentioned_in(message) or isinstance(message.channel, discord.DMChannel):
         prompt = message.content.replace(f'<@{client.user.id}>', '').strip()
         if not prompt:
@@ -70,4 +88,6 @@ async def on_message(message):
             except Exception as e:
                 await message.channel.send(f"⚠️ حدث خطأ في النظام: {str(e)}")
 
-client.run(DISCORD_TOKEN)
+if __name__ == "__main__":
+    keep_alive()
+    client.run(DISCORD_TOKEN)
