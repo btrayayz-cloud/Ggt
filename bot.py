@@ -1,24 +1,7 @@
 import os
 import discord
 import requests
-from flask import Flask
-from threading import Thread
 
-# إعداد خادم وهمي ليرضي موقع Render ولا يغلق البوت بسبب الـ Port
-app = Flask('')
-
-@app.route('/')
-def home():
-    return "I am alive!"
-
-def run():
-    app.run(host='0.0.0.0', port=8080)
-
-def keep_alive():
-    t = Thread(target=run)
-    t.start()
-
-# إعداد بوت الديسكورد
 intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
@@ -35,7 +18,6 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    # التفاعل عند إشارة البوت أو في الرسائل الخاصة
     if client.user.mentioned_in(message) or isinstance(message.channel, discord.DMChannel):
         prompt = message.content.replace(f'<@{client.user.id}>', '').strip()
         if not prompt:
@@ -50,7 +32,6 @@ async def on_message(message):
                     "X-Title": "Discord AI Bot"
                 }
                 
-                # استخدام نموذج مجاني ومستقر تماماً
                 data = {
                     "model": "meta-llama/llama-3.1-8b-instruct:free",
                     "messages": [
@@ -89,6 +70,4 @@ async def on_message(message):
             except Exception as e:
                 await message.channel.send(f"⚠️ حدث خطأ في النظام: {str(e)}")
 
-if __name__ == "__main__":
-    keep_alive()
-    client.run(DISCORD_TOKEN)
+client.run(DISCORD_TOKEN)
