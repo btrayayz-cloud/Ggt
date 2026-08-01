@@ -33,13 +33,13 @@ async def on_message(message):
                     "X-Title": "Discord AI Bot"
                 }
                 
-                # ترتيب الرسائل بشكل صحيح
+                # استخدام نموذج Gemini Flash المجاني والسريع جداً
                 data = {
                     "model": "google/gemini-2.0-flash-lite-001:free",
                     "messages": [
                         {
                             "role": "system", 
-                            "content": "أنت مساعد ذكي تتحدث وتفهم اللغة العربية بطلاقة، وتجيب دائماً باللغة العربية بأسلوب واضح ومفيد."
+                            "content": "أنت مساعد ذكي تتحدث وتفهم اللغة العربية بطلاقة. أجب دائماً باللغة العربية بأسلوب واضح وودود."
                         },
                         {
                             "role": "user", 
@@ -60,7 +60,7 @@ async def on_message(message):
                 if response.status_code == 200 and "choices" in res_data and len(res_data["choices"]) > 0:
                     reply = res_data['choices'][0]['message']['content']
 
-                    # تقطيع الرد إذا كان أطول من 2000 حرف
+                    # تقطيع الرد إذا كان أطول من حد ديسكورد (2000 حرف)
                     if len(reply) > 2000:
                         for i in range(0, len(reply), 2000):
                             await message.channel.send(reply[i:i+2000])
